@@ -2,9 +2,14 @@ package org.bdlabucr;
 
 import java.io.IOException;
 
+import java.util.*; // maps
+
+import java.nio.file.Paths; // paths
+
 // jackson library to read/write json files
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +30,8 @@ public class RaptorServlet extends HttpServlet {
             jsonGenerator.writeNumberField("num1", 3);
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
+            /*ObjectMapper mapper = new ObjectMapper();
+            Map<?, ?> map = mapper.readValue(Paths.get("TIGER2018_ZCTA5_riverside.geojson").toFile(), Map.class);*/
         }
     }
 }
