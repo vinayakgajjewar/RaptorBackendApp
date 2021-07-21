@@ -1,4 +1,5 @@
-package org.bdlabucr;
+//package org.bdlabucr;
+package edu.ucr.cs.bdlab.raptor;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ public class RaptorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("application/json");
+        //response.setContentType("application/geo+json");
         response.setStatus(HttpServletResponse.SC_OK);
         //response.getWriter().println("{}");
         try (JsonGenerator jsonGenerator = new JsonFactory().createGenerator(response.getOutputStream())) {

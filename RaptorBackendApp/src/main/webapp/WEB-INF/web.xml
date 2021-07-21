@@ -8,7 +8,7 @@
 
   <servlet>
     <servlet-name>Raptor</servlet-name>
-    <servlet-class>org.bdlabucr.RaptorServlet</servlet-class>
+    <servlet-class>edu.ucr.cs.bdlab.raptor.RaptorServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Raptor</servlet-name>
