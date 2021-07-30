@@ -10,11 +10,11 @@
   <name>Raptor Backend App</name>
 
   <properties>
-      <jettyVersion>10.0.0</jettyVersion>
+    <jettyVersion>9.3.24.v20180605</jettyVersion>
 
     <!--https://stackoverflow.com/questions/53034953/error-source-option-5-is-no-longer-supported-use-6-or-later-on-maven-compile-->
-      <maven.compiler.source>7</maven.compiler.source>
-      <maven.compiler.target>7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -42,10 +42,19 @@
 
   <build>
     <plugins>
-      <plugin>
+  <plugin>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${jettyVersion}</version>
+        <configuration>
+          <verbose>true</verbose>
+          <fork>true</fork>
+          <executable>/usr/bin/javac</executable>
+          <compilerVersion>1.8</compilerVersion>
+          <!--https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-source-and-target.html-->
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
       </plugin>
     </plugins>
   </build>
