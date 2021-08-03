@@ -3,7 +3,8 @@ package edu.ucr.cs.bdlab.raptor;
 
 import java.io.IOException;
 
-import java.util.*; // maps
+// import java.util.*; // maps
+import java.util.List; // lists
 
 // for some reason, including this import causes the servlet to break :(
 //import java.nio.file.Paths; // paths
@@ -33,49 +34,27 @@ import javax.servlet.http.HttpServletResponse;
 
 public class RaptorServlet extends HttpServlet {
 
-    //protected Configuration conf;
-
-    //protected BeastOptions opts;
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        //response.setContentType("application/json");
+        // we set content-type as application/geo+json
+        // not application/json
         response.setContentType("application/geo+json");
         response.setStatus(HttpServletResponse.SC_OK);
 
-        // should this be a JavaSparkContext or a JavaSpatialSparkContext?
-        // either way, it throws the same error
-
+        // create our JavaSparkContext
         SparkConf sparkconf = new SparkConf().setAppName("appName").setMaster("local[*]");
-
-        //SparkContext sparkcontext = new SparkContext(sparkconf);
-
-        //JavaSparkContext sc = new JavaSparkContext(sparkcontext);
         JavaSparkContext sc = new JavaSparkContext(sparkconf);
-        JavaRDD<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson");
 
-
-        //JavaSpatialSparkContext sc = new JavaSpatialSparkContext();
-        //JavaRDD<IFeature> records = sc.geojsonFile("exampleinput.geojson");
+        // read an example geojson file into a list
+        List<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").collect();
 
         try (GeoJSONFeatureWriter writer = new GeoJSONFeatureWriter()) {
             writer.initialize(response.getOutputStream(), new Configuration());
-                writer.write(records.first());
+            //System.out.println("SIZEE:");
+            //System.out.println(records.size());
+            writer.write(records.get(0));
         } catch (InterruptedException e) {
             System.out.println(e);
         }
-
-        //response.getWriter().println("{}");
-
-        /*
-        try (JsonGenerator jsonGenerator = new JsonFactory().createGenerator(response.getOutputStream())) {
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeFieldName("field1");
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeNumberField("num1", 3);
-            jsonGenerator.writeEndObject();
-            jsonGenerator.writeEndObject();
-        }
-        */
     }
 }
