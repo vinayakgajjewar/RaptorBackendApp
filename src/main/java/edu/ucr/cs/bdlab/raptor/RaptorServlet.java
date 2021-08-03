@@ -1,6 +1,7 @@
 //package org.bdlabucr;
 package edu.ucr.cs.bdlab.raptor;
 
+
 import java.io.IOException;
 
 // import java.util.*; // maps
@@ -42,12 +43,14 @@ public class RaptorServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
 
         // create our JavaSparkContext
+        // local[*] tells Spark to run with as many worker threads as there are cores on the machine
         SparkConf sparkconf = new SparkConf().setAppName("appName").setMaster("local[*]");
         JavaSparkContext sc = new JavaSparkContext(sparkconf);
 
         // read an example geojson file into a list
         List<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").collect();
 
+        // try writing out a record
         try (GeoJSONFeatureWriter writer = new GeoJSONFeatureWriter()) {
             writer.initialize(response.getOutputStream(), new Configuration());
             //System.out.println("SIZEE:");
