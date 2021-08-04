@@ -35,27 +35,46 @@ import javax.servlet.http.HttpServletResponse;
 
 public class RaptorServlet extends HttpServlet {
 
+    protected SparkConf sparkconf;
+    protected JavaSparkContext sc;
+
+    protected DBRead dbr;
+
+    public RaptorServlet() {
+        System.out.println("----initializing servlet");
+
+        // initialize DB reader
+        dbr = new DBRead();
+
+        // create our JavaSparkContext
+        // local[*] tells Spark to run with as many worker threads as there are cores on the machine
+        sparkconf = new SparkConf().setAppName("appName").setMaster("local[*]");
+        sc = new JavaSparkContext(sparkconf);
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        dbr.read();
 
         // we set content-type as application/geo+json
         // not application/json
         response.setContentType("application/geo+json");
         response.setStatus(HttpServletResponse.SC_OK);
 
-        // create our JavaSparkContext
-        // local[*] tells Spark to run with as many worker threads as there are cores on the machine
-        SparkConf sparkconf = new SparkConf().setAppName("appName").setMaster("local[*]");
-        JavaSparkContext sc = new JavaSparkContext(sparkconf);
-
         // read an example geojson file into a list
-        List<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").collect();
+        long cnt = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").count();
+        System.out.println(cnt);
+
+        //List<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").collect();
+        JavaRDD<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson");
+
+        System.out.println("----done reading records");
 
         // try writing out a record
         try (GeoJSONFeatureWriter writer = new GeoJSONFeatureWriter()) {
             writer.initialize(response.getOutputStream(), new Configuration());
-            //System.out.println("SIZEE:");
-            //System.out.println(records.size());
-            writer.write(records.get(0));
+            //writer.write(records.get(0));
+            writer.write(records.first());
         } catch (InterruptedException e) {
             System.out.println(e);
         }
