@@ -16,11 +16,11 @@ This project requires Java 8 to work correctly with Apache Spark.
 
 In addition, you will need a MongoDB connection string to be able to connect to a cluster. It should look something like the following.
 
-```mongodb+srv://<someuser>:<somepasswd>@freecluster.ts1sn.mongodb.net/test?retryWrites=true&w=majority```
+```mongodb+srv://<some_user>:<some_passwd>@freecluster.ts1sn.mongodb.net/test?retryWrites=true&w=majority```
 
 ### Development
 
-Use ```> mvn jetty:run -Dmongodb.uri="<my connection string>"``` to build and run the web application without needing to assemble it into a WAR file.
+Use ```> mvn jetty:run -Dmongodb.uri="<my_connection_string>"``` to build and run the web application without needing to assemble it into a WAR file.
 
 ### Building a WAR file
 
