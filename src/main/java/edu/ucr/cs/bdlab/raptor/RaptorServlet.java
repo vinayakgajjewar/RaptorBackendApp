@@ -62,19 +62,22 @@ public class RaptorServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
 
         // read an example geojson file into a list
-        long cnt = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").count();
-        System.out.println(cnt);
+        //long cnt = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").count();
+        //System.out.println(cnt);
 
-        //List<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").collect();
-        JavaRDD<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson");
+        List<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "state.geojson", "geojson").collect();
+        //JavaRDD<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson");
 
         System.out.println("----done reading records");
 
         // try writing out a record
         try (GeoJSONFeatureWriter writer = new GeoJSONFeatureWriter()) {
             writer.initialize(response.getOutputStream(), new Configuration());
+            for (int i = 0; i < records.size(); i++) {
+                writer.write(records.get(i));
+            }
             //writer.write(records.get(0));
-            writer.write(records.first());
+            //writer.write(records.first());
         } catch (InterruptedException e) {
             System.out.println(e);
         }
