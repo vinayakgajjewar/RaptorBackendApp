@@ -61,6 +61,11 @@ public class RaptorServlet extends HttpServlet {
         response.setContentType("application/geo+json");
         response.setStatus(HttpServletResponse.SC_OK);
 
+        // set Access-Control-Allow-Origin
+        // otherwise, the front-end won't be able to make GET requests to this server
+        // because of CORS policy
+        response.addHeader("Access-Control-Allow-Origin", "*");
+
         // read an example geojson file into a list
         //long cnt = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").count();
         //System.out.println(cnt);
