@@ -23,10 +23,10 @@ import edu.ucr.cs.bdlab.beast.geolite.IFeature;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.spark.api.java.JavaSparkContext;
+//import org.apache.spark.api.java.JavaSparkContext;
 // https://spark.apache.org/docs/latest/rdd-programming-guide.html
-import org.apache.spark.SparkContext;
-import org.apache.spark.SparkConf;
+//import org.apache.spark.SparkContext;
+//import org.apache.spark.SparkConf;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,8 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class RaptorServlet extends HttpServlet {
 
-    protected SparkConf sparkconf;
-    protected JavaSparkContext sc;
+    protected SparkConnector sparkconnector;
 
     protected DBRead dbr;
 
@@ -46,10 +45,8 @@ public class RaptorServlet extends HttpServlet {
         // initialize DB reader
         dbr = new DBRead();
 
-        // create our JavaSparkContext
-        // local[*] tells Spark to run with as many worker threads as there are cores on the machine
-        sparkconf = new SparkConf().setAppName("appName").setMaster("local[*]");
-        sc = new JavaSparkContext(sparkconf);
+        // get or create spark context
+        sparkconnector = SparkConnector.getInstance();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -70,7 +67,7 @@ public class RaptorServlet extends HttpServlet {
         //long cnt = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").count();
         //System.out.println(cnt);
 
-        List<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "data/geojson/TIGER2018_STATE_data_index.geojson", "geojson").collect();
+        List<IFeature> records = SpatialReader.readInput(sparkconnector.sc, new BeastOptions(), "data/geojson/TIGER2018_STATE_data_index.geojson", "geojson").collect();
         //JavaRDD<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson");
 
         System.out.println("----done reading records");
