@@ -67,7 +67,7 @@ public class RaptorServlet extends HttpServlet {
         //long cnt = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson").count();
         //System.out.println(cnt);
 
-        List<IFeature> records = SpatialReader.readInput(sparkconnector.sc, new BeastOptions(), "data/geojson/TIGER2018_STATE_data_index.geojson", "geojson").collect();
+        List<IFeature> records = SpatialReader.readInput(sparkconnector.getSC(), new BeastOptions(), "data/geojson/TIGER2018_STATE_data_index.geojson", "geojson").collect();
         //JavaRDD<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson");
 
         System.out.println("----done reading records");

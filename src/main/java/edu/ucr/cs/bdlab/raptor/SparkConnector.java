@@ -31,4 +31,9 @@ class SparkConnector {
         }
         return singleInstance;
     }
+
+    // JavaSparkConnector getter
+    public JavaSparkContext getSC() {
+        return this.sc;
+    }
 }
