@@ -43,7 +43,7 @@ public class RaptorServlet extends HttpServlet {
         System.out.println("----initializing servlet");
 
         // initialize DB reader
-        dbr = new DBRead();
+        dbr = DBRead.getInstance();
 
         // get or create spark context
         sparkconnector = SparkConnector.getInstance();

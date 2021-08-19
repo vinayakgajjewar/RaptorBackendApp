@@ -42,16 +42,11 @@ public class CountyServlet extends HttpServlet {
     public CountyServlet() {
         System.out.println("----initializing servlet");
 
-        // initialize DB reader
-        dbr = new DBRead();
-
         // get or create spark context
         sparkconnector = SparkConnector.getInstance();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        dbr.read();
 
         // we set content-type as application/geo+json
         // not application/json
