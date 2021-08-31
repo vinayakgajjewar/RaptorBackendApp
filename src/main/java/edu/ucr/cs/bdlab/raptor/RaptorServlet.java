@@ -64,6 +64,9 @@ public class RaptorServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        // time at start of GET request
+        long t1 = System.nanoTime();
+
         float minx = Float.parseFloat(request.getParameter("minx"));
         float miny = Float.parseFloat(request.getParameter("miny"));
         float maxx = Float.parseFloat(request.getParameter("maxx"));
@@ -106,5 +109,14 @@ public class RaptorServlet extends HttpServlet {
         } catch (InterruptedException e) {
             System.out.println(e);
         }
+
+        // time at end of GET request
+        long t2 = System.nanoTime();
+
+        // print out statistics
+        System.out.println("----GET request duration:");
+        System.out.println((t2 - t1) * 1e-9);
+        System.out.println("----records sent:");
+        System.out.println(filteredRecords.size());
     }
 }
