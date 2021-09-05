@@ -72,6 +72,11 @@ public class RaptorServlet extends HttpServlet {
         float maxx = Float.parseFloat(request.getParameter("maxx"));
         float maxy = Float.parseFloat(request.getParameter("maxy"));
 
+        System.out.println("----minx: " + Float.toString(minx));
+        System.out.println("----miny: " + Float.toString(miny));
+        System.out.println("----maxx: " + Float.toString(maxx));
+        System.out.println("----maxy: " + Float.toString(maxy));
+
         dbr.read();
 
         // we set content-type as application/geo+json
