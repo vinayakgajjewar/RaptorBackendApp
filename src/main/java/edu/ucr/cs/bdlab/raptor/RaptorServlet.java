@@ -91,8 +91,15 @@ public class RaptorServlet extends HttpServlet {
 
         // read an example geojson file into a list
 
-        JavaRDD<IFeature> records = jssc.readCSVPoint("data/csv/test_wildfire_visualization_4326.csv", "x", "y", '\t', true);
 
+        // use csv (slow)
+        //JavaRDD<IFeature> records = jssc.readCSVPoint("data/csv/test_wildfire_visualization_4326.csv", "x", "y", '\t', true);
+        //JavaRDD<IFeature> records = jssc.readCSVPoint("data/csv/wildfire_visualization_4326_reversed.csv", "x", "y", '\t', true);
+
+        // use rtree (fast)
+        JavaRDD<IFeature> records = jssc.spatialFile("data/rtree/test_wildfire_index/part-00000.rtree", "rtree");
+
+        
         // filter by map extents
         GeometryFactory geometryFactory = new GeometryFactory();
         Geometry extents = geometryFactory.toGeometry(new Envelope(minx, miny, maxx, maxy));
