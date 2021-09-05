@@ -104,6 +104,10 @@ public class RaptorServlet extends HttpServlet {
         GeometryFactory geometryFactory = new GeometryFactory();
         Geometry extents = geometryFactory.toGeometry(new Envelope(minx, miny, maxx, maxy));
         List<IFeature> filteredRecords = JavaSpatialRDDHelper.rangeQuery(records, extents).collect();
+        
+
+        // don't filter by map extents
+        //List<IFeature> filteredRecords = records.collect();
 
         //List<IFeature> records = SpatialReader.readInput(sparkconnector.getSC(), new BeastOptions(), "data/geojson/TIGER2018_STATE_data_index.geojson", "geojson").collect();
         //JavaRDD<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson");
