@@ -77,7 +77,7 @@ public class RaptorServlet extends HttpServlet {
         System.out.println("----maxx: " + Float.toString(maxx));
         System.out.println("----maxy: " + Float.toString(maxy));
 
-        dbr.read();
+        //dbr.read();
 
         // we set content-type as application/geo+json
         // not application/json
