@@ -64,18 +64,33 @@ public class RaptorServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        float minx, miny, maxx, maxy;
+
         // time at start of GET request
         long t1 = System.nanoTime();
 
-        float minx = Float.parseFloat(request.getParameter("minx"));
-        float miny = Float.parseFloat(request.getParameter("miny"));
-        float maxx = Float.parseFloat(request.getParameter("maxx"));
-        float maxy = Float.parseFloat(request.getParameter("maxy"));
+        // wrap code in try-catch block to handle case where user accesses endpoint directly in browser
+        try {
 
-        System.out.println("----minx: " + Float.toString(minx));
-        System.out.println("----miny: " + Float.toString(miny));
-        System.out.println("----maxx: " + Float.toString(maxx));
-        System.out.println("----maxy: " + Float.toString(maxy));
+            minx = Float.parseFloat(request.getParameter("minx"));
+            miny = Float.parseFloat(request.getParameter("miny"));
+            maxx = Float.parseFloat(request.getParameter("maxx"));
+            maxy = Float.parseFloat(request.getParameter("maxy"));
+
+            System.out.println("----minx: " + Float.toString(minx));
+            System.out.println("----miny: " + Float.toString(miny));
+            System.out.println("----maxx: " + Float.toString(maxx));
+            System.out.println("----maxy: " + Float.toString(maxy));
+
+        } catch (java.lang.NullPointerException e) {
+
+            // extents obj isn't given when accessing endpoint via browser
+            // so fill in our own values
+            minx = -130;
+            miny = 32;
+            maxx = -115;
+            maxy = 45;
+        }
 
         //dbr.read();
 
