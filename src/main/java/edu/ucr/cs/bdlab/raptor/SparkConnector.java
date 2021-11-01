@@ -20,7 +20,7 @@ class SparkConnector {
         // initialize Spark context
         // local[*] tells Spark to run with as many worker threads as there are cores on the machine
         System.out.println("----initializing Spark context");
-        sc = new JavaSparkContext(new SparkConf().setAppName("Raptor").setMaster("local[*]"));
+        sc = new JavaSparkContext(new SparkConf().setAppName("Raptor").setMaster("local"));
         System.out.println("----finished initializing Spark context");
     }
 
