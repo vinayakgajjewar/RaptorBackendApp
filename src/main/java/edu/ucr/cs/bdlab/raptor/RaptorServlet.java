@@ -6,6 +6,7 @@ import java.io.IOException;
 
 // import java.util.*; // maps
 import java.util.List; // lists
+import java.util.ArrayList;
 
 // for some reason, including this import causes the servlet to break :(
 //import java.nio.file.Paths; // paths
@@ -20,12 +21,22 @@ import edu.ucr.cs.bdlab.beast.io.SpatialReader;
 import edu.ucr.cs.bdlab.beast.JavaSpatialSparkContext;
 import edu.ucr.cs.bdlab.beast.common.BeastOptions;
 import edu.ucr.cs.bdlab.beast.geolite.IFeature;
+import edu.ucr.cs.bdlab.beast.geolite.ITile;
+import edu.ucr.cs.bdlab.raptor.Statistics;
+import edu.ucr.cs.bdlab.beast.JavaSpatialRDDHelper;
+import edu.ucr.cs.bdlab.raptor.HDF4Reader;
+import edu.ucr.cs.bdlab.raptor.RaptorMixin;
 import edu.ucr.cs.bdlab.beast.JavaSpatialRDDHelper;
 
-
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FileStatus;
+
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.rdd.RDD;
+import org.apache.spark.api.java.JavaPairRDD;
 // https://spark.apache.org/docs/latest/rdd-programming-guide.html
 //import org.apache.spark.SparkContext;
 //import org.apache.spark.SparkConf;
@@ -35,6 +46,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import scala.Tuple2;
+import scala.Tuple4;
+import scala.Tuple5;
 
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
@@ -112,13 +126,22 @@ public class RaptorServlet extends HttpServlet {
         //JavaRDD<IFeature> records = jssc.readCSVPoint("data/csv/wildfire_visualization_4326_reversed.csv", "x", "y", '\t', true);
 
         // use rtree (fast)
-        JavaRDD<IFeature> records = jssc.spatialFile("data/rtree/test_wildfire_index/part-00000.rtree", "rtree");
+        JavaRDD<IFeature> records = jssc.spatialFile("data/rtree/wildfire_index/wildfire_index/", "rtree");
 
+        //JavaRDD<IFeature> records = jssc.shapefile("data/shapefile/CA_farmland.zip");
         
         // filter by map extents
         GeometryFactory geometryFactory = new GeometryFactory();
         Geometry extents = geometryFactory.toGeometry(new Envelope(minx, miny, maxx, maxy));
         List<IFeature> filteredRecords = JavaSpatialRDDHelper.rangeQuery(records, extents).collect();
+
+        // read geotiff data
+        //RaptorMixin.RasterReadMixinFunctions rrmf = RaptorMixin.RasterReadMixinFunctions(JavaSparkContext.toSparkContext(sparkconnector.getSC()));
+        //RDD<ITile> raster = rrmf.geoTiff("data/geotiff/0_5_compressed/ph.tif", 0, new BeastOptions());
+        //RaptorMixin.RasterReadMixinFunctions rrmf = new RaptorMixin.RasterReadMixinFunctions(JavaSparkContext.toSparkContext(sparkconnector.getSC()));
+        //RDD<ITile> raster = rrmf.geoTiff("data/geotiff/0_5_compressed/ph.tif", 0, new BeastOptions());
+
+        //JavaRDD<ITile> rasterRecords = jssc.geoTiff("data/geotiff/0_5_compressed/ph.tif", 0, new BeastOptions());
 
         //List<IFeature> records = SpatialReader.readInput(sparkconnector.getSC(), new BeastOptions(), "data/geojson/TIGER2018_STATE_data_index.geojson", "geojson").collect();
         //JavaRDD<IFeature> records = SpatialReader.readInput(sc, new BeastOptions(), "exampleinput.geojson", "geojson");
@@ -128,7 +151,13 @@ public class RaptorServlet extends HttpServlet {
         // try writing out a record
         try (GeoJSONFeatureWriter writer = new GeoJSONFeatureWriter()) {
             writer.initialize(response.getOutputStream(), new Configuration());
-            for (int i = 0; i < filteredRecords.size(); i++) {
+            /*for (int i = 0; i < filteredRecords.size(); i++) {
+                writer.write(filteredRecords.get(i));
+            }*/
+
+            // max number of features to write
+            int maxRecords = 1000;
+            for (int i = 0; i < maxRecords; i++) {
                 writer.write(filteredRecords.get(i));
             }
             //writer.write(records.get(0));
