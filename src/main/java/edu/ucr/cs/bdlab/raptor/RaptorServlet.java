@@ -132,7 +132,7 @@ public class RaptorServlet extends HttpServlet {
         
         // filter by map extents
         GeometryFactory geometryFactory = new GeometryFactory();
-        Geometry extents = geometryFactory.toGeometry(new Envelope(minx, miny, maxx, maxy));
+        Geometry extents = geometryFactory.toGeometry(new Envelope(minx, maxx, miny, maxy));
         List<IFeature> filteredRecords = JavaSpatialRDDHelper.rangeQuery(records, extents).collect();
 
         // read geotiff data
