@@ -12,7 +12,7 @@ The zonal statistics query takes in an aggregate function (sum, avg, max, ...), 
 
 ### Setup
 
-This project requires Java 8 to work correctly with Apache Spark.
+This project requires Java 1.8.0 to work correctly with Apache Spark. Additionally, deploying to Apache Tomcat requires Tomcat 9.
 
 In addition, you will need a MongoDB connection string to be able to connect to a cluster. It should look something like the following.
 
@@ -25,3 +25,15 @@ Use ```> mvn jetty:run -Dmongodb.uri="<my_connection_string>"``` to build and ru
 ### Building a WAR file
 
 Use ```> mvn package``` to generate a WAR file which can be deployed to a production server.
+
+# Deploying to Apache Tomcat
+
+First, download Tomcat 9 from [this link](https://tomcat.apache.org/download-90.cgi). To deploy the generated WAR file, copy it to the /webapps directory inside of the Tomcat installation. To be able to start Apache Tomcat, you need to make `startup.sh`, `shutdown.sh`, and `catalina.sh` executable. Add the following lines to `conf/tomcat-users.xml`:
+
+```xml
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<user username="admin" password="password" roles="manager-gui, manager-script"/>
+```
+
+Navigate to `localhost:8080/manager` and log in with your admin credentials to access the Tomcat Manager, where the Raptor web app should appear under Applications.
