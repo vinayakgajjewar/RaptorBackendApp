@@ -36,4 +36,6 @@ First, download Tomcat 9 from [this link](https://tomcat.apache.org/download-90.
 <user username="admin" password="password" roles="manager-gui, manager-script"/>
 ```
 
+Move the R-tree files to `apache-tomcat-9.0.54/data/rtree/wildfire_index/` and start the Tomcat server using `> ./bin/startup.sh`. It is important that the Tomcat server is started from inside the `apache-tomcat-9.0.54/` directory so that Tomcat knows where the data files for the web application are located.
+
 Navigate to `localhost:8080/manager` and log in with your admin credentials to access the Tomcat Manager, where the Raptor web app should appear under Applications.
