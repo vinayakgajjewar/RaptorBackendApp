@@ -24,7 +24,7 @@ Use ```> mvn jetty:run -Dmongodb.uri="<my_connection_string>"``` to build and ru
 
 ### Building a WAR file
 
-Use ```> mvn package``` to generate a WAR file which can be deployed to a production server.
+Use ```> mvn clean package``` to generate a WAR file which can be deployed to a production server.
 
 # Deploying to Apache Tomcat
 
