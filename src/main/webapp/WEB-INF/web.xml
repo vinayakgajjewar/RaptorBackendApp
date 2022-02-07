@@ -16,7 +16,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Raptor</servlet-name>
-    <url-pattern>/vectors/states.geojson/*</url-pattern>
+    <url-pattern>/vectors/wildfire.geojson/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>CountyServlet</servlet-name>
