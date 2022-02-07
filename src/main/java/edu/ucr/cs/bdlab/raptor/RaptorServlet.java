@@ -134,7 +134,7 @@ public class RaptorServlet extends HttpServlet {
         GeometryFactory geometryFactory = new GeometryFactory();
         Geometry extents = geometryFactory.toGeometry(new Envelope(minx, maxx, miny, maxy));
         // take 5000 records maximum
-        List<IFeature> filteredRecords = JavaSpatialRDDHelper.rangeQuery(records, extents).take(5000);
+        List<IFeature> filteredRecords = JavaSpatialRDDHelper.rangeQuery(records, extents).take(1000);
 
         // read geotiff data
         //RaptorMixin.RasterReadMixinFunctions rrmf = RaptorMixin.RasterReadMixinFunctions(JavaSparkContext.toSparkContext(sparkconnector.getSC()));
